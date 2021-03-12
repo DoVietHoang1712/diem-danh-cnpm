@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  server:
+    image: ais/hrm:0.0.1
+    env_file:
+      - .env
+    ports:
+      - '${SERVER_PORT}:${SERVER_PORT}'
