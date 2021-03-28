@@ -23,7 +23,7 @@ export const WorkspaceAuthorization = () => applyDecorators(
         JwtAuthGuard,
         RolesGuard,
         IdentifiedDeviceGuard,
-        WorkspaceIpAddressGuard,
+        // WorkspaceIpAddressGuard,
     ),
     ApiBearerAuth(),
     ApiErrorResponse(

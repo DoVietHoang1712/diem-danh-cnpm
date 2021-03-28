@@ -1,7 +1,7 @@
 module.exports = [
     {
         script: "dist/main.js",
-        name: "human-resource-management",
+        name: "diem-danh-cnpm",
         exec_model: "cluster",
         instances: "1",
     },

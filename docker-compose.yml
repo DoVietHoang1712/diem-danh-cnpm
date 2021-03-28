@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   server:
-    image: ais/hrm:0.0.1
+    image: hoang1712/nodejs-docker-cnpm
     env_file:
       - .env
     ports:

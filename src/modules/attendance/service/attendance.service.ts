@@ -68,9 +68,6 @@ export class AttendanceService {
         data: Attendance,
     ): Promise<AttendanceResult> {
         const registerAt = moment(data.registerAt).format("HH:mm");
-        if (registerAt < data.workFrom) {
-            return AttendanceResult.EARLY;
-        }
         const delay = parseInt(await this.settingService.getSettingValue(SettingKey.ATTENDANCE_REGISTER_DELAY_ALLOW), 10);
         const registerAtWithDelay = moment(data.registerAt).subtract(delay, "minutes").format("HH:mm");
         if (registerAtWithDelay <= data.workFrom) {
