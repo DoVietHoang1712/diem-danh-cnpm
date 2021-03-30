@@ -48,7 +48,10 @@ jobs:
           password: ${{ secrets.REMOTE_PASSWORD }}
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
-          script: whoami
+          script: |
+            whoami
+            docker version
+            cd diem-danh-cnpm
 #           EXCLUDE: "/dist/, /node_modules/"
       
 #     - name: docker build
