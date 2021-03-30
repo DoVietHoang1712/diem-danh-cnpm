@@ -45,7 +45,7 @@ jobs:
     - name: Deploy to Server
       uses: appleboy/ssh-action@master
       with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          password: ${{ secrets.REMOTE_PASSWORD }}
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           script: whoami
