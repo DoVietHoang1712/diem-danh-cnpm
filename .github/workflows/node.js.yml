@@ -42,6 +42,15 @@ jobs:
       
       env:
         CI: true
+    - name: Deploy to Server
+      uses: appleboy/ssh-action@master
+      with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          script: whoami
+#           EXCLUDE: "/dist/, /node_modules/"
+      
 #     - name: docker build
 #       uses: actions/docker/cli@master
 #       with:
