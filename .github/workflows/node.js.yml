@@ -49,9 +49,9 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           script: |
-            whoami
-            docker version
-            cd diem-danh-cnpm
+            cd /home/hoang171220001/diem-danh-cnpm
+            git pull origin main
+            npm run build && pm2 restart main
 #           EXCLUDE: "/dist/, /node_modules/"
       
 #     - name: docker build
