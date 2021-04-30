@@ -1,9 +1,12 @@
+import { TrangThaiRequestIdentity } from './../common/user.constant';
+import { RequestIdentityDocument } from './../entities/request-identity.entity';
+import { DB_REQUEST_IDENTITY } from './../../repository/db-collection';
 import { AccessibleModel } from "@casl/mongoose";
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { InjectModel } from "@nestjs/mongoose";
 import { info } from "console";
-import { DocumentQuery, mongo } from "mongoose";
+import { DocumentQuery, Model, mongo } from "mongoose";
 import { CommonResultDto } from "../../../common/dto/common-result.dto";
 import { PageableDto } from "../../../common/dto/pageable.dto";
 import { ErrorData } from "../../../common/exception/error-data";
@@ -25,6 +28,8 @@ export class UserService {
   constructor(
     @InjectModel(DB_USER)
     private readonly userModel: AccessibleModel<UserDocument>,
+    @InjectModel(DB_REQUEST_IDENTITY)
+    private readonly requestIdentityModel: Model<RequestIdentityDocument>,
 
     private readonly userAbilityFactory: UserAbilityFactory,
     private readonly jwtService: JwtService,
@@ -141,6 +146,33 @@ export class UserService {
       jti: new mongo.ObjectId().toHexString(),
     };
     return { accessToken: this.jwtService.sign(payload) };
+  }
+
+  async sendRequestChangeIdentity(user: UserDocument): Promise<any> {
+    if (!user.identifiedDeviceInfo.deviceId) {
+      throw ErrorData.init(
+        HttpStatus.BAD_REQUEST,
+        UserErrorCode.BAD_REQUEST_EMPTY_CLIENT_DEVICE_ID,
+      );
+    }
+    const docs: RequestIdentityDocument = {
+      idUserRequest: user._id,
+      trangThai: TrangThaiRequestIdentity.PROCESSING,
+    } as any;
+    const data = await this.requestIdentityModel.create(docs);
+    return { success: true, message: "OK" };
+  }
+
+  async getRequestChangeIdentity(): Promise<any> {
+    return this.requestIdentityModel.find({ trangThai: TrangThaiRequestIdentity.PROCESSING });
+  }
+
+  async process(idRequest: string): Promise<any> {
+    const request = await this.requestIdentityModel.findById(idRequest);
+    request.trangThai = TrangThaiRequestIdentity.ACCEPTED;
+    await request.save();
+    await this.userModel.updateOne({ _id: request.idUserRequest }, { $unset: { identifiedDeviceInfo: 1 } });
+    return { success: true, message: "OK" };
   }
 
   async testRemove(user: UserDocument) {
