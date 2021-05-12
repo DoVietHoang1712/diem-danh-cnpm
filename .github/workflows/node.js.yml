@@ -49,7 +49,7 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           script: |
-            cd /home/hoang171220001/diem-danh-cnpm
+            cd /home/azureuser/diem-danh-cnpm
             git pull origin main
             npm run build && pm2 restart main
 #           EXCLUDE: "/dist/, /node_modules/"
