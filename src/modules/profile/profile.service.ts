@@ -74,7 +74,7 @@ export class ProfileService {
         return this.profileModel.findOneAndUpdate(
             { username: user.username },
             { $set: updateProfileDto },
-            { runValidators: true, upsert: true },
+            { runValidators: true, upsert: true, new: true },
         );
     }
 
