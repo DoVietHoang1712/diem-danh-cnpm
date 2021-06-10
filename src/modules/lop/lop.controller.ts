@@ -37,7 +37,7 @@ export class LopController {
     async searchCurrentAvailableClass(@Req() req: Request, @Query("maKyHoc") maKyHoc: string) {
         const maGv = (req.user as User).maSv;
         const data = await this.lopService.searchCurrentAvailableClass(maGv, maKyHoc);
-        return data[0], data[1];
+        return data;
     }
 
     @Get("getListGiaoVienAndHocSinhTheoLop/:id")

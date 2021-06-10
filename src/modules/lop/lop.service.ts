@@ -107,13 +107,12 @@ export class LopService {
                 maMonHoc: 1,
                 maLopHoc: 1,
                 maKyHoc: 1,
+                lichHoc: 1,
             })
-            .populate("kyHoc")
-            .populate("monHoc", "-createdAt -updatedAt")
             .sort({ tenLopHoc: 1 })
             .lean()
             .exec();
-        return [data, data.length];
+        return data;
     }
 
     async find(options: QueryOption, conditions: object = {}): Promise<Lop[]> {
