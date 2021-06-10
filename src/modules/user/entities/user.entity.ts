@@ -25,6 +25,10 @@ export class User {
     @Prop({ required: true, unique: true, trim: true, lowercase: true })
     username: string;
 
+    @IsString()
+    @Prop({ unique: true })
+    maSv: string;
+
     /**
      * @example password
      */

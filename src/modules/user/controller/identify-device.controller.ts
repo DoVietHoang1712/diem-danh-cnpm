@@ -27,7 +27,7 @@ export class IdentifyDeviceController {
     }
 
     @Post("/request-change")
-    @SystemRoles(SystemRole.USER)
+    @SystemRoles(SystemRole.SINH_VIEN)
     async createRequestChange(@ReqUser() user: UserDocument): Promise<any> {
         const data = await this.userService.sendRequestChangeIdentity(user);
         return ResponseDto.response(data);

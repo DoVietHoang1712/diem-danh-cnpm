@@ -11,7 +11,7 @@ export class UserAbilityFactory {
         return defineAbility<Ability<[Action, any]>>((can, cannot) => {
             if (user.systemRoles.includes(SystemRole.ADMIN)) {
                 can("manage", DB_USER);
-            } else if (user.systemRoles.includes(SystemRole.USER)) {
+            } else if (user.systemRoles.includes(SystemRole.SINH_VIEN) || user.systemRoles.includes(SystemRole.GIANG_VIEN)) {
                 can("read", DB_USER, { _id: user._id });
                 can("update", DB_USER, { _id: user._id });
             }

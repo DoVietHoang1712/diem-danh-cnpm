@@ -11,7 +11,7 @@ export class ProfileAbitityFactory {
         return defineAbility<Ability<[Action, any]>>((can, cannot) => {
             if (user.systemRoles.includes(SystemRole.ADMIN)) {
                 can("manage", DB_PROFILE);
-            } else if (user.systemRoles.includes(SystemRole.USER)) {
+            } else if (user.systemRoles.includes(SystemRole.SINH_VIEN) || user.systemRoles.includes(SystemRole.GIANG_VIEN)) {
                 can("read", DB_PROFILE, { username: user.username });
                 can("update", DB_PROFILE, { username: user.username });
             }
@@ -19,4 +19,4 @@ export class ProfileAbitityFactory {
     }
 }
 
-const x = new ProfileAbitityFactory().createForUser({systemRoles: [SystemRole.USER]} as UserDocument);
+const x = new ProfileAbitityFactory().createForUser({ systemRoles: [SystemRole.SINH_VIEN, SystemRole.GIANG_VIEN] } as UserDocument);

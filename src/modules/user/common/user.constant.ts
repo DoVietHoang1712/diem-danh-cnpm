@@ -1,7 +1,7 @@
 export enum SystemRole {
     ADMIN = "Admin",
-    USER = "User",
-    GUEST = "Guest",
+    SINH_VIEN = "SinhVien",
+    GIANG_VIEN = "GiangVien",
 }
 
 export enum UserErrorCode {

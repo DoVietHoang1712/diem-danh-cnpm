@@ -1,3 +1,5 @@
+import { KyHocModule } from './modules/ky-hoc/ky-hoc.module';
+import { LopModule } from './modules/lop/lop.module';
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_FILTER, APP_INTERCEPTOR } from "@nestjs/core";
@@ -42,6 +44,8 @@ import { UserModule } from "./modules/user/user.module";
     ProfileModule,
     SettingModule,
     AttendanceModule,
+    LopModule,
+    KyHocModule,
   ],
   providers: [
     {
