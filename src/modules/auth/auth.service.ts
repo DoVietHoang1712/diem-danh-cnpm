@@ -40,7 +40,7 @@ export class AuthService {
             },
             jti: new mongo.ObjectId().toHexString(),
         };
-        return { accessToken: this.jwtService.sign(payload) };
+        return { user, accessToken: this.jwtService.sign(payload) };
     }
 
     async loginMobile(user: UserDocument, loginInfo: LoginMobileRequestDto): Promise<LoginResultDto> {
@@ -53,7 +53,7 @@ export class AuthService {
             },
             jti: new mongo.ObjectId().toHexString(),
         };
-        return { accessToken: this.jwtService.sign(payload) };
+        return { user, accessToken: this.jwtService.sign(payload) };
     }
 
 }
