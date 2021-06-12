@@ -145,7 +145,7 @@ export class UserService {
       },
       jti: new mongo.ObjectId().toHexString(),
     };
-    return { accessToken: this.jwtService.sign(payload) };
+    return { user, accessToken: this.jwtService.sign(payload) };
   }
 
   async sendRequestChangeIdentity(user: UserDocument): Promise<any> {
