@@ -1,3 +1,4 @@
+import { LopDocument, LOP_MODEL } from './../../lop/lop.schema';
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import * as Crypto from "crypto-js";
@@ -20,7 +21,8 @@ import { Attendance, AttendanceDocument } from "../entities/attendance.entity";
 import { PageableDto } from "./../../../common/dto/pageable.dto";
 import { DB_PROFILE, DB_USER } from "./../../repository/db-collection";
 import { AttendanceUnregisteredPageableDto } from "./../dto/attendance-not-registed-pageable.dto";
-
+import * as blueBird from "bluebird";
+import { ProfileDocument } from '../../profile/entities/profile.entity';
 @Injectable()
 export class AttendanceService {
     constructor(
@@ -28,6 +30,10 @@ export class AttendanceService {
         private readonly attendanceModel: Model<AttendanceDocument>,
         @InjectModel(DB_USER)
         private readonly userModel: Model<UserDocument>,
+        @InjectModel(LOP_MODEL)
+        private readonly lopModel: Model<LopDocument>,
+        @InjectModel(DB_PROFILE)
+        private readonly profileModel: Model<ProfileDocument>,
         private readonly settingService: SettingService,
     ) { }
 
@@ -69,8 +75,8 @@ export class AttendanceService {
     ): Promise<AttendanceResult> {
         const registerAt = moment(data.registerAt).format("HH:mm");
         const delay = parseInt(await this.settingService.getSettingValue(SettingKey.ATTENDANCE_REGISTER_DELAY_ALLOW), 10);
-        const registerAtWithDelay = moment(data.registerAt).subtract(delay, "minutes").format("HH:mm");
-        if (registerAtWithDelay <= data.workFrom) {
+        const registerAtWithDelay = moment(data.registerAt).format("HH:mm");
+        if (registerAt <= data.studyFrom) {
             return AttendanceResult.IN_TIME;
         } else {
             return AttendanceResult.LATE;
@@ -139,7 +145,7 @@ export class AttendanceService {
             return {
                 periodOfTime,
                 status: AttendanceType.OUT,
-                workDuration: existsOut.workDuration,
+                workDuration: 0,
             };
         }
     }
@@ -148,7 +154,10 @@ export class AttendanceService {
         user: UserDocument,
         info: AttendanceRegisterDto,
     ): Promise<AttendanceDocument> {
-        const today = AttendanceService.getTodayString();
+        const today = moment().toDate();
+        const date = today.getDate();
+        const month = today.getMonth();
+        const year = today.getFullYear();
 
         await this.validateRegister(info);
 
@@ -161,12 +170,16 @@ export class AttendanceService {
         const timeInfo = await this.getAttendanceTimeInfo(registerAt);
 
         const data: Attendance = {
-            username: user.username,
+            username: user.maSv,
             deviceId: user.clientDeviceId,
-            date: today,
+            date: date,
+            month,
+            year,
+            maLopHoc: info.maLopHoc,
+            maMonHoc: info.maMocHoc,
             registerAt: new Date(),
-            workFrom: timeInfo.workFrom,
-            workTo: timeInfo.workTo,
+            studyFrom: info.studyFrom,
+            studyTo: info.studyTo,
             periodOfTime: timeInfo.periodOfTime,
             inResult: undefined,
             type: AttendanceType.IN,
@@ -180,7 +193,10 @@ export class AttendanceService {
         user: UserDocument,
         info: AttendanceRegisterDto,
     ): Promise<AttendanceDocument> {
-        const today = AttendanceService.getTodayString();
+        const today = moment().toDate();
+        const date = today.getDate();
+        const month = today.getMonth();
+        const year = today.getFullYear();
 
         await this.validateRegister(info);
 
@@ -201,15 +217,99 @@ export class AttendanceService {
         const data: Attendance = {
             username: user.username,
             deviceId: user.clientDeviceId,
-            date: today,
+            date: date,
+            month,
+            year,
+            maLopHoc: info.maLopHoc,
+            maMonHoc: info.maMocHoc,
             registerAt: new Date(),
-            workFrom: timeInfo.workFrom,
-            workTo: timeInfo.workTo,
+            studyFrom: timeInfo.workFrom,
+            studyTo: timeInfo.workTo,
             periodOfTime: timeInfo.periodOfTime,
-            workDuration: Math.floor(moment.duration(moment().diff(moment(inRegister.createdAt))).asSeconds()),
+            // workDuration: Math.floor(moment.duration(moment().diff(moment(inRegister.createdAt))).asSeconds()),
             type: AttendanceType.OUT,
         };
         return this.attendanceModel.create(data);
+    }
+
+    async getRegistedUserInClass(maLopHoc: string, date: number, month: number, year: number, studyFrom: string, studyTo: string) {
+        const lop = await this.lopModel.findOne({ maLopHoc });
+        const danhSachSinhVien = lop.danhSachSinhVien.sort((a: any, b: any) => a.maSv - b.maSv);
+        const result = await blueBird.Promise.map(danhSachSinhVien, async sinhVien => {
+            const profile = await this.profileModel.findOne({ username: sinhVien.maSv });
+            const data = await this.attendanceModel.findOne({
+                username: sinhVien.maSv,
+                date,
+                month,
+                year,
+                maLopHoc,
+                studyFrom,
+                studyTo,
+            });
+            return {
+                maSv: sinhVien.maSv,
+                firstname: profile?.firstname ?? null,
+                lastname: profile?.lastname ?? null,
+                registerAt: data?.registerAt ?? null,
+                inResult: data?.inResult ?? null,
+            }
+        }, { concurrency: 4 });
+        return result;
+        // const data = await this.lopModel.aggregate([
+        //     {
+        //         $match: {
+        //             maLopHoc: maLopHoc,
+        //         }
+        //     },
+        //     {
+        //         $unwind: "$danhSachSinhVien"
+        //     },
+        //     {
+        //         $lookup: {
+        //             from: DB_PROFILE,
+        //             localField: "danhSachSinhVien.maSv",
+        //             foreignField: "username",
+        //             as: "profile",
+        //         }
+        //     },
+        //     { $unwind: "$profile" },
+        //     // {
+        //     //     $lookup: {
+        //     //         from: DB_ATTENDANCE,
+        //     //         let: { username: "$danhSachSinhVien.maSv" },
+        //     //         pipeline: [
+        //     //             {
+        //     //                 $match: {
+        //     //                     $expr: {
+        //     //                         $and: [
+        //     //                             { $eq: ["$username", "$$username"] },
+        //     //                             { $eq: ["$type", "In"] },
+        //     //                             { $eq: ["$month", month] },
+        //     //                             { $eq: ["$year", year] },
+        //     //                             { $eq: ["$date", date] },
+        //     //                             { $eq: ["$maLopHoc", maLopHoc] },
+        //     //                             { $eq: ["$studyFrom", studyFrom] },
+        //     //                             { $eq: ["$studyTo", studyTo] },
+        //     //                         ]
+        //     //                     }
+        //     //                 }
+        //     //             }
+        //     //         ],
+        //     //         as: "checkIn",
+        //     //     }
+        //     // },
+        //     // { $unwind: "$checkIn" },
+        //     {
+        //         $project: {
+        //             maSv: "$danhSachSinhVien.maSv",
+        //             firstname: "$profile.firstname",
+        //             lastname: "$profile.lastname",
+        //             registerAt: "$checkIn.registerAt",
+        //             // inResult: "$checkIn.inResult",
+        //         }
+        //     }
+        // ]);
+        // console.log(data);
     }
 
     async getRegistedUser(

@@ -30,6 +30,7 @@ export const LopSchema = new Schema(
             type: String,
             index: true,
         },
+        tenMonHoc: String,
         sySo: {
             type: Number,
             default: 0,
@@ -246,6 +247,10 @@ export class Lop {
     @ApiProperty()
     @Prop()
     maMonHoc: string;
+
+    @ApiProperty()
+    @Prop()
+    tenMonHoc: string;
 
     @ApiProperty()
     nhomTo: string;

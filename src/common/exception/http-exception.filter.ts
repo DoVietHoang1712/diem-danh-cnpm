@@ -27,6 +27,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         } else {
             statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
             errorDescription = "Internal server error";
+            console.error(exception.message);
         }
 
         const errorObject = {
@@ -37,9 +38,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
             errorCode,
             errorDescription,
         } as ErrorResponseDto;
-        
+
         console.error(JSON.stringify(Object.assign({}, errorObject, { exception }), null, 2));;
         response.status(statusCode).json(errorObject);
 
     }
-} 
+}

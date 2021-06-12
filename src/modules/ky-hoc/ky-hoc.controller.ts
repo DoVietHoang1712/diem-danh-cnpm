@@ -14,21 +14,11 @@ import { SystemRole } from '../user/common/user.constant';
 export class KyHocController {
     constructor(private readonly kyHocService: KyHocService) { }
 
-    // @Get("/current")
-    // async findCurrentKyHoc() {
-    //     const query: QueryPostOption = {
-    //         options: {
-    //             skip: 0,
-    //             limit: 1,
-    //             sort: {
-    //                 ngayBatDau: -1,
-    //             },
-    //             select: {},
-    //         },
-    //     };
-    //     const data = await this.kyHocService.getOne(query);
-    //     return data;
-    // }
+    @Get("/current")
+    async findCurrentKyHoc() {
+        const data = await this.kyHocService.findCurrentKyHoc();
+        return data;
+    }
 
     @Post()
     @SystemRoles(SystemRole.ADMIN)

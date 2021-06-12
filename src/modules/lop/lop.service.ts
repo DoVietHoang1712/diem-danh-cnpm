@@ -105,6 +105,7 @@ export class LopService {
             .select({
                 tenLopHoc: 1,
                 maMonHoc: 1,
+                tenMonHoc: 1,
                 maLopHoc: 1,
                 maKyHoc: 1,
                 lichHoc: 1,

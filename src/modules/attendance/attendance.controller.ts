@@ -32,6 +32,27 @@ export class AttendanceController {
         private readonly attendanceModel: Model<AttendanceDocument>,
     ) { }
 
+    @Get("/dashboard")
+    @ApiOperation({
+        description: "Lấy danh sách sinh viên điểm danh theo lớp",
+    })
+    @ApiQuery({ name: "maLopHoc", example: "INT1340-20202-06" })
+    @ApiQuery({ name: "studyFrom", example: "18:00" })
+    @ApiQuery({ name: "studyTo", example: "19:50" })
+    @ApiQuery({ name: "date", example: new Date().getDate() })
+    @ApiQuery({ name: "month", example: new Date().getMonth() })
+    @ApiQuery({ name: "year", example: new Date().getFullYear() })
+    async getDashboard(
+        @Query("maLopHoc") maLopHoc: string,
+        @Query("studyFrom") studyFrom: string,
+        @Query("studyTo") studyTo: string,
+        @Query("date") date: number,
+        @Query("month") month: number,
+        @Query("year") year: number,
+    ) {
+        const data = await this.attendanceService.getRegistedUserInClass(maLopHoc, date, month, year, studyFrom, studyTo);
+        return ResponseDto.response(data);
+    }
     @Get("/registered")
     @ApiOperation({
         description: "Lấy danh sách user đã điểm danh theo ngày và theo buổi",
