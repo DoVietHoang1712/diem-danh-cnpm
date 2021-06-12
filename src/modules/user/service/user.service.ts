@@ -116,7 +116,7 @@ export class UserService {
     } else {
       throw ErrorData.init(
         HttpStatus.BAD_REQUEST,
-        UserErrorCode.BAD_REQUEST_DEVICE_IDENDIFIED,
+        UserErrorCode.WRONG_PASSWORD,
       );
     }
   }
