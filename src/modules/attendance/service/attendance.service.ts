@@ -62,9 +62,9 @@ export class AttendanceService {
             this.getAttendanceOtp(),
             this.settingService.getSettingValue(SettingKey.WORKSPACE_BSSID),
         ]);
-        if (info.otp !== otp) {
-            throw ErrorData.init(HttpStatus.BAD_REQUEST, AttendanceErrorCode.BAD_REQUEST_INVALID_OTP);
-        }
+        // if (info.otp !== otp) {
+        //     throw ErrorData.init(HttpStatus.BAD_REQUEST, AttendanceErrorCode.BAD_REQUEST_INVALID_OTP);
+        // }
         // if (String(info.bssid).toUpperCase() !== String(bssid).toUpperCase()) {
         //     throw ErrorData.init(HttpStatus.BAD_REQUEST, AttendanceErrorCode.BAD_REQUEST_INVALID_BSSID);
         // }
