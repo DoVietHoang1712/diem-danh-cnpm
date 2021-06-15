@@ -159,7 +159,7 @@ export class AttendanceService {
         const month = today.getMonth();
         const year = today.getFullYear();
 
-        await this.validateRegister(info);
+        // await this.validateRegister(info);
 
         const status = await this.getAttendanceStatus(user);
         if (status.status !== AttendanceType.NONE) {
