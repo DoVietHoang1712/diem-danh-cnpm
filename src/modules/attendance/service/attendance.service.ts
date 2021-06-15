@@ -167,7 +167,7 @@ export class AttendanceService {
         // }
         const isExists = await this.attendanceModel.findOne({username: user.username, maLopHoc: info.maLopHoc, studyFrom: info.studyFrom, studyTo: info.studyTo, date, month, year});
         if (isExists) {
-            throw ErrorData.init(HttpStatus.BAD_REQUEST, AttendanceErrorCode.BAD_REQUEST_INVALID_TYPE);
+            throw ErrorData.init(HttpStatus.BAD_REQUEST, AttendanceErrorCode.BAD_REQUEST_INVALID_TYPE, "Đã thực hiện điểm danh");
         }
         const registerAt = new Date();
         // const timeInfo = await this.getAttendanceTimeInfo(registerAt);
