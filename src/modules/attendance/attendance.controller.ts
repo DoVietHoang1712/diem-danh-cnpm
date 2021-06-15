@@ -127,6 +127,7 @@ export class AttendanceController {
         @ReqUser() user: UserDocument,
         @Body() info: AttendanceRegisterDto,
     ): Promise<AttendanceResponseDto> {
+        console.log(info);
         const data = await this.attendanceService.createIn(user, info);
         return ResponseDto.response(data);
     }

@@ -5,7 +5,7 @@ export class AttendanceRegisterDto {
     @IsString()
     @ApiProperty()
     @IsOptional()
-    otp?: string;
+    otp?: number;
 
     @IsString()
     @ApiProperty()
