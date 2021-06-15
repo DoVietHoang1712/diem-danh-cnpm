@@ -93,7 +93,7 @@ export class LopService {
         return danhSachKyHocCoLop;
     }
 
-    async searchCurrentAvailableClass(maGv: string, maKyHoc: string): Promise<any> {
+    async searchCurrentAvailableClass(maKyHoc: string): Promise<any> {
         // maKyHoc =
         //     maKyHoc ||
         //     (await this.kyHocModel
