@@ -165,7 +165,7 @@ export class AttendanceService {
         // if (status.status !== AttendanceType.NONE) {
         //     throw ErrorData.init(HttpStatus.BAD_REQUEST, AttendanceErrorCode.BAD_REQUEST_INVALID_TYPE);
         // }
-        const isExists = await this.attendanceModel.findOne({username: user.username.toUpperCase(), maLopHoc: info.maLopHoc, studyFrom: info.studyFrom, studyTo: info.studyTo, date, month, year});
+        const isExists = await this.attendanceModel.findOne({username: user.username, maLopHoc: info.maLopHoc, studyFrom: info.studyFrom, studyTo: info.studyTo, date, month, year});
         if (isExists) {
             throw ErrorData.init(HttpStatus.BAD_REQUEST, AttendanceErrorCode.BAD_REQUEST_INVALID_TYPE);
         }
@@ -173,7 +173,7 @@ export class AttendanceService {
         // const timeInfo = await this.getAttendanceTimeInfo(registerAt);
 
         const data: Attendance = {
-            username: user.maSv,
+            username: user.maSv.toLowerCase(),
             deviceId: user.clientDeviceId,
             date,
             month,
