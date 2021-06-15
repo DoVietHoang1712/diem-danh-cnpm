@@ -35,8 +35,7 @@ export class LopController {
     @Get("giang-vien/search/available-class/current")
     @SystemRoles(SystemRole.GIANG_VIEN, SystemRole.ADMIN, SystemRole.SINH_VIEN)
     async searchCurrentAvailableClass(@Req() req: Request, @Query("maKyHoc") maKyHoc: string) {
-        const maGv = (req.user as User).maSv;
-        const data = await this.lopService.searchCurrentAvailableClass(maGv, maKyHoc);
+        const data = await this.lopService.searchCurrentAvailableClass(maKyHoc);
         return data;
     }
 

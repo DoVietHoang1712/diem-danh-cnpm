@@ -101,7 +101,7 @@ export class LopService {
         //         .sort({ maKyHoc: -1 })
         //         .then(res => res.maKyHoc));
         const data = await this.lopModel
-            .find({ maKyHoc, "danhSachGiangVien.maGv": { $ne: maGv } })
+            .find({ maKyHoc })
             .select({
                 tenLopHoc: 1,
                 maMonHoc: 1,
