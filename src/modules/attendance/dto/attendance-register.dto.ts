@@ -13,7 +13,8 @@ export class AttendanceRegisterDto {
 
     @IsString()
     @ApiProperty()
-    maMocHoc: string;
+    @IsOptional()
+    maMocHoc?: string;
 
     @ApiProperty()
     @IsString()

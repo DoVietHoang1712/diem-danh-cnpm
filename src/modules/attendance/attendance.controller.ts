@@ -105,7 +105,7 @@ export class AttendanceController {
     }
 
     @Post("register/me/in")
-    @WorkspaceAuthorization()
+    // @WorkspaceAuthorization()
     @ApiErrorResponse(
         HttpStatus.BAD_REQUEST,
         [
@@ -119,7 +119,7 @@ export class AttendanceController {
             },
             {
                 errorCode: AttendanceErrorCode.BAD_REQUEST_INVALID_TYPE,
-                errorDescription: "Điểm danh không đúng trạng thái, ví dụ khi trạng thái điểm danh là In nhưng lại gọi điểm danh Out",
+                errorDescription: "Đã thực hiện điểm danh",
             },
         ]
     )

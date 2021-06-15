@@ -158,29 +158,31 @@ export class AttendanceService {
         const date = today.getDate();
         const month = today.getMonth();
         const year = today.getFullYear();
-
+        console.log(date);
         // await this.validateRegister(info);
 
-        const status = await this.getAttendanceStatus(user);
-        if (status.status !== AttendanceType.NONE) {
+        // const status = await this.getAttendanceStatus(user);
+        // if (status.status !== AttendanceType.NONE) {
+        //     throw ErrorData.init(HttpStatus.BAD_REQUEST, AttendanceErrorCode.BAD_REQUEST_INVALID_TYPE);
+        // }
+        const isExists = await this.attendanceModel.findOne({username: user.username.toUpperCase(), maLopHoc: info.maLopHoc, studyFrom: info.studyFrom, studyTo: info.studyTo, date, month, year});
+        if (isExists) {
             throw ErrorData.init(HttpStatus.BAD_REQUEST, AttendanceErrorCode.BAD_REQUEST_INVALID_TYPE);
         }
-
         const registerAt = new Date();
-        const timeInfo = await this.getAttendanceTimeInfo(registerAt);
+        // const timeInfo = await this.getAttendanceTimeInfo(registerAt);
 
         const data: Attendance = {
             username: user.maSv,
             deviceId: user.clientDeviceId,
-            date: date,
+            date,
             month,
             year,
             maLopHoc: info.maLopHoc,
             maMonHoc: info.maMocHoc,
-            registerAt: new Date(),
             studyFrom: info.studyFrom,
             studyTo: info.studyTo,
-            periodOfTime: timeInfo.periodOfTime,
+            // periodOfTime: timeInfo.periodOfTime,
             inResult: undefined,
             type: AttendanceType.IN,
         };
