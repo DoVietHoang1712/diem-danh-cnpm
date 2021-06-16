@@ -1,5 +1,5 @@
 import { LopDocument, LOP_MODEL } from './../../lop/lop.schema';
-import { HttpStatus, Injectable } from "@nestjs/common";
+import { HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import * as Crypto from "crypto-js";
 import { filter } from "lodash";
@@ -236,27 +236,31 @@ export class AttendanceService {
 
     async getRegistedUserInClass(maLopHoc: string, date: number, month: number, year: number, studyFrom: string, studyTo: string) {
         const lop = await this.lopModel.findOne({ maLopHoc });
-        const danhSachSinhVien = lop.danhSachSinhVien.sort((a: any, b: any) => a.maSv - b.maSv);
-        const result = await blueBird.Promise.map(danhSachSinhVien, async sinhVien => {
-            const profile = await this.profileModel.findOne({ username: sinhVien.maSv });
-            const data = await this.attendanceModel.findOne({
-                username: sinhVien.maSv,
-                date,
-                month,
-                year,
-                maLopHoc,
-                studyFrom,
-                studyTo,
-            });
-            return {
-                maSv: sinhVien.maSv,
-                firstname: profile?.firstname ?? null,
-                lastname: profile?.lastname ?? null,
-                registerAt: data?.registerAt ?? null,
-                inResult: data?.inResult ?? null,
-            }
-        }, { concurrency: 4 });
-        return result;
+        if (lop) {
+            const danhSachSinhVien = lop.danhSachSinhVien.sort((a: any, b: any) => a.maSv - b.maSv);
+            const result = await blueBird.Promise.map(danhSachSinhVien, async sinhVien => {
+                const profile = await this.profileModel.findOne({ username: sinhVien.maSv });
+                const data = await this.attendanceModel.findOne({
+                    username: sinhVien.maSv.toLowerCase(),
+                    date,
+                    month,
+                    year,
+                    maLopHoc,
+                    studyFrom,
+                    studyTo,
+                });
+                return {
+                    maSv: sinhVien.maSv,
+                    firstname: profile?.firstname ?? null,
+                    lastname: profile?.lastname ?? null,
+                    registerAt: data?.registerAt ?? null,
+                    inResult: data?.inResult ?? null,
+                }
+            }, { concurrency: 4 });
+            return result;
+        } else {
+            throw new NotFoundException("Không tìm thấy thông tin lớp");
+        }
         // const data = await this.lopModel.aggregate([
         //     {
         //         $match: {
