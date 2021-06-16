@@ -49,7 +49,8 @@ export class AttendanceController {
         @Query("date") date: number,
         @Query("month") month: number,
         @Query("year") year: number,
-    ) {
+    ) { 
+        console.log(maLopHoc);
         const data = await this.attendanceService.getRegistedUserInClass(maLopHoc, date, month, year, studyFrom, studyTo);
         return ResponseDto.response(data);
     }
