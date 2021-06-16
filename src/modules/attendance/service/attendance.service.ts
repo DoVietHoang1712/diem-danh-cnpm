@@ -239,7 +239,7 @@ export class AttendanceService {
         if (lop) {
             const danhSachSinhVien = lop.danhSachSinhVien.sort((a: any, b: any) => a.maSv - b.maSv);
             const result = await blueBird.Promise.map(danhSachSinhVien, async sinhVien => {
-                const profile = await this.profileModel.findOne({ username: sinhVien.maSv });
+                const profile = await this.profileModel.findOne({ username: sinhVien.maSv.toLowerCase() });
                 const data = await this.attendanceModel.findOne({
                     username: sinhVien.maSv.toLowerCase(),
                     date,
