@@ -49,9 +49,10 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           script: |
-            cd /home/azureuser/diem-danh-cnpm
-            git pull origin main
-            npm run build && pm2 restart main
+            cd /home/ubuntu
+            echo "123"
+#            git pull origin main
+#            npm run build && pm2 restart main
 #           EXCLUDE: "/dist/, /node_modules/"
       
 #     - name: docker build
