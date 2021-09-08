@@ -43,14 +43,13 @@ jobs:
       env:
         CI: true
     - name: Deploy to Server
-      uses: appleboy/ssh-action@master
+      uses: shimataro/ssh-key-action@v2
       with:
-          password: ${{ secrets.REMOTE_PASSWORD }}
-          host: ${{ secrets.REMOTE_HOST }}
-          username: ${{ secrets.REMOTE_USER }}
-          script: |
-            cd /home/ubuntu
-            echo "123"
+        key: ${{ secrets.SSH_KEY }}
+        name: id_rsa
+        known_hosts: ${{ secrets.KNOWN_HOSTS }}
+    - name: rsync over ssh
+      run: ./deploy.sh
 #            git pull origin main
 #            npm run build && pm2 restart main
 #           EXCLUDE: "/dist/, /node_modules/"
