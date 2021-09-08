@@ -4,7 +4,6 @@ import { KyHocService } from "./ky-hoc.service";
 import { ApiTags } from "@nestjs/swagger";
 import { CreateKyHocDTO } from "./dto/create-ky-hoc.dto";
 import { UpdateKyHocDTO } from "./dto/update-ky-hoc-dto";
-import { QueryPostOption } from "src/tools/request.tool";
 import { Authorization } from "../../common/decorator/auth.decorator";
 import { SystemRole } from '../user/common/user.constant';
 
