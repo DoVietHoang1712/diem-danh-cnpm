@@ -1,10 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
 
 export class AttendanceRegisterDto {
-    @IsString()
     @ApiProperty()
-    otp: string;
+    @IsOptional()
+    otp?: number;
 
     @IsString()
     @ApiProperty()
@@ -12,7 +12,8 @@ export class AttendanceRegisterDto {
 
     @IsString()
     @ApiProperty()
-    maMocHoc: string;
+    @IsOptional()
+    maMocHoc?: string;
 
     @ApiProperty()
     @IsString()

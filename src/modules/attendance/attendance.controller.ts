@@ -49,7 +49,8 @@ export class AttendanceController {
         @Query("date") date: number,
         @Query("month") month: number,
         @Query("year") year: number,
-    ) {
+    ) { 
+        console.log(maLopHoc);
         const data = await this.attendanceService.getRegistedUserInClass(maLopHoc, date, month, year, studyFrom, studyTo);
         return ResponseDto.response(data);
     }
@@ -105,7 +106,7 @@ export class AttendanceController {
     }
 
     @Post("register/me/in")
-    @WorkspaceAuthorization()
+    // @WorkspaceAuthorization()
     @ApiErrorResponse(
         HttpStatus.BAD_REQUEST,
         [
@@ -119,7 +120,7 @@ export class AttendanceController {
             },
             {
                 errorCode: AttendanceErrorCode.BAD_REQUEST_INVALID_TYPE,
-                errorDescription: "Điểm danh không đúng trạng thái, ví dụ khi trạng thái điểm danh là In nhưng lại gọi điểm danh Out",
+                errorDescription: "Đã thực hiện điểm danh",
             },
         ]
     )
@@ -127,6 +128,7 @@ export class AttendanceController {
         @ReqUser() user: UserDocument,
         @Body() info: AttendanceRegisterDto,
     ): Promise<AttendanceResponseDto> {
+        console.log(info);
         const data = await this.attendanceService.createIn(user, info);
         return ResponseDto.response(data);
     }

@@ -16,21 +16,21 @@ export class Attendance {
     @IsString()
     username: string;
 
-    @Prop({ required: true })
+    @Prop({  })
     @IsString()
-    deviceId: string;
+    deviceId?: string;
 
     @Prop({ required: true })
-    @IsNotEmpty()
-    date: number;
+    @IsOptional()
+    date?: number;
 
     @Prop({ required: true })
-    @IsNotEmpty()
-    month: number;
+    @IsOptional()
+    month?: number;
 
     @Prop({ required: true })
-    @IsNotEmpty()
-    year: number;
+    @IsOptional()
+    year?: number;
 
     @Prop()
     @IsString()
@@ -38,11 +38,12 @@ export class Attendance {
 
     @Prop()
     @IsString()
-    maMonHoc: string;
+    @IsOptional()
+    maMonHoc?: string;
 
     @Prop({ default: () => Date.now() })
     @IsOptional()
-    registerAt: Date;
+    registerAt?: Date;
 
     @Prop({ maxlength: 5, required: true })
     @IsOptional()
@@ -52,9 +53,9 @@ export class Attendance {
     @IsOptional()
     studyTo: string;
 
-    @Prop({ enum: Object.values(PeriodOfTime), required: true })
+    @Prop({ enum: Object.values(PeriodOfTime) })
     @IsOptional()
-    periodOfTime: PeriodOfTime;
+    periodOfTime?: PeriodOfTime;
 
     @Prop({ enum: Object.values(AttendanceResult) })
     @IsOptional()
