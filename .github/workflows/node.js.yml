@@ -49,7 +49,7 @@ jobs:
         name: id_rsa
         known_hosts: ${{ secrets.KNOWN_HOSTS }}
     - name: rsync over ssh
-      run: ./deploy.sh
+      run: . deploy.sh
 #            git pull origin main
 #            npm run build && pm2 restart main
 #           EXCLUDE: "/dist/, /node_modules/"
