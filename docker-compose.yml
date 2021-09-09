@@ -7,3 +7,25 @@ services:
       - .env
     ports:
       - '${SERVER_PORT}:${SERVER_PORT}'
+    networks: 
+      - template_network
+    depends_on: 
+      - mongo
+  mongo:
+    image: mongo
+    env_file:
+      - .env
+    environment:                      
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:27017"
+    networks:
+      - template_network
+    volumes:
+      - ./data/mongo:/data/db
+    restart: unless-stopped
+
+networks:
+  template_network:
+    name: ${NETWORK_NAME}

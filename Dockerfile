@@ -2,7 +2,7 @@ FROM node:12-alpine as builder
 
 WORKDIR /app
 
-COPY ["package.json", "package-lock.json", "tsconfig.*", "nest-cli.json", "src", "./"]
+COPY ["package.json", "package-lock.json", "tsconfig.*", "nest-cli.json", ".env", "src", "./"]
 
 RUN npm install
 RUN npm run build
