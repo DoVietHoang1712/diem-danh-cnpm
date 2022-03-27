@@ -25,7 +25,7 @@ pipeline {
             }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh "pwd"
+                    sh "cd ~"
                     sh 'echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD'
                 }
                 sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} . "
