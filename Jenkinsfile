@@ -6,18 +6,18 @@ pipeline {
     }
 
     stages {
-        stage("Test") {
-            agent {
-                docker {
-                    image 'node:12'
-                    args '-u 0:0 -v /tmp:/root/.cache'
-                }
-            }
-            steps {
-                sh 'npm install'
+        // stage("Test") {
+        //     agent {
+        //         docker {
+        //             image 'node:12'
+        //             args '-u 0:0 -v /tmp:/root/.cache'
+        //         }
+        //     }
+        //     steps {
+        //         sh 'npm install'
             
-            }
-        }
+        //     }
+        // }
         stage("build") {
             agent { node {label 'master'}}
             environment {
