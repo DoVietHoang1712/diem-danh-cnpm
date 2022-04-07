@@ -1,19 +1,17 @@
-FROM node:12-alpine as builder
+FROM node:10-alpine as builder
 
 WORKDIR /app
 
 COPY ["package.json", "package-lock.json", "tsconfig.*", "nest-cli.json", "src", "./"]
 
-RUN npm install
-RUN npm run build
+RUN npm install && npm run build
 
-FROM node:12-alpine
+FROM node:10-alpine
 
 WORKDIR /app
 
 RUN npm install -g pm2
-RUN pm2 set pm2-logrotate:max_size 1024K
-RUN pm2 set pm2-logrotate:retain 8
+RUN pm2 set pm2-logrotate:max_size 1024K && pm2 set pm2-logrotate:retain 8
 
 COPY ecosystem.config.js ./
 COPY --from=builder /app/dist ./dist
