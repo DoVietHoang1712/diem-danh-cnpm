@@ -12,7 +12,7 @@ on:
 jobs:
   build-and-publish:
     name: build and public
-    runs-on: ubuntu-latest
+    runs-on: [action_runner_dev]
     strategy:
       matrix:
         node-version: [12.x]
@@ -28,22 +28,22 @@ jobs:
       run: |
         npm install
         npm run build --if-present
-    - name: Login to Docker Hub
-      run: docker login --username "${{ secrets.DOCKER_USERNAME }}" --password "${{ secrets.DOCKER_PASSWORD }}"
-    - name: Build the Docker Image 
-      run: docker build . --file Dockerfile --tag hoang1712/nodejs-docker-cnpm
-    - name: Push the Docker Image 
-      run: docker push hoang1712/nodejs-docker-cnpm
+    # - name: Login to Docker Hub
+    #   run: docker login --username "${{ secrets.DOCKER_USERNAME }}" --password "${{ secrets.DOCKER_PASSWORD }}"
+    # - name: Build the Docker Image 
+    #   run: docker build . --file Dockerfile --tag hoang1712/nodejs-docker-cnpm
+    # - name: Push the Docker Image 
+    #   run: docker push hoang1712/nodejs-docker-cnpm
       
-      env:
-        CI: true
-    - name: Deploy to Server
-      uses: shimataro/ssh-key-action@v2
-      with:
-        key: ${{ secrets.SSH_KEY }}
-        name: id_rsa
-        known_hosts: ${{ secrets.KNOWN_HOSTS }}
-    - name: rsync over ssh
-      run: |
-        chmod +x ./deploy.sh
-        ./deploy.sh
+    #   env:
+    #     CI: true
+    # - name: Deploy to Server
+    #   uses: shimataro/ssh-key-action@v2
+    #   with:
+    #     key: ${{ secrets.SSH_KEY }}
+    #     name: id_rsa
+    #     known_hosts: ${{ secrets.KNOWN_HOSTS }}
+    # - name: rsync over ssh
+    #   run: |
+    #     chmod +x ./deploy.sh
+    #     ./deploy.sh
